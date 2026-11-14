@@ -1,0 +1,19 @@
+// The forum page's styles. Compiled by js/build-css.cjs into the lazy staff chunk, NOT into
+// forum.css: ordinary visitors never download any of this.
+
+@import 'common.less';
+
+.MemberDeskForum {
+  padding: 20px 0 40px;
+}
+
+.MemberDeskForum-title {
+  margin: 0 0 16px;
+  font-size: 22px;
+  color: var(--heading-color, var(--text-color));
+}
+
+// Above the phone's Mobile Tab bar when one is present.
+.MemberDeskForumPage .MemberDesk-bulk {
+  bottom: calc(20px + var(--mobile-tab-height, 0px));
+}
