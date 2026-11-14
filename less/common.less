@@ -1,0 +1,1770 @@
+// Member Desk: shared by the admin's Users page and the forum's /member-desk.
+//
+// 🚨 Readability under every theme: every text colour is set explicitly from Flarum 2's own
+// properties (--text-color, --muted-color, --body-bg, --control-bg, --primary-color), and links
+// are prefixed with html:not(#x-hi) so a theme's link rule (Bespoke light colours links at 0,3,1)
+// never turns names blue or low-contrast. Status colours are our own, set for light AND dark
+// (a theme colour can't be borrowed for something that must be seen).
+
+.MemberDesk {
+  --md-text: var(--text-color, #1f2933);
+  --md-muted: var(--muted-color, #5f6b7a);
+  --md-faint: var(--muted-more-color, #8a96a5);
+  --md-bg: var(--body-bg, #fff);
+  --md-soft: var(--control-bg, #e7edf3);
+  --md-line: color-mix(in srgb, var(--md-text) 12%, transparent);
+  --md-hover: color-mix(in srgb, var(--md-text) 4%, transparent);
+  --md-primary: var(--primary-color, #4d698e);
+  --md-sel: color-mix(in srgb, var(--md-primary) 12%, var(--md-bg));
+  --md-ok: #1b6b35;
+  --md-ok-bg: #e2f3e7;
+  --md-warn: #7a4f00;
+  --md-warn-bg: #fff1cf;
+  --md-danger: #a8261b;
+  --md-danger-bg: #fde8e6;
+  --md-info: #24456e;
+  --md-info-bg: #e6eef8;
+  --md-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
+  --md-radius: 10px;
+
+  color: var(--md-text);
+  font-size: 14px;
+  line-height: 1.45;
+  padding-bottom: 96px;
+}
+
+html[data-theme^='dark'] .MemberDesk {
+  --md-ok: #86dba2;
+  --md-ok-bg: #173022;
+  --md-warn: #ffd27a;
+  --md-warn-bg: #36290f;
+  --md-danger: #ff9b91;
+  --md-danger-bg: #3b1d1b;
+  --md-info: #b3cdf2;
+  --md-info-bg: #1b2738;
+  --md-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.MemberDesk *,
+.MemberDesk *::before,
+.MemberDesk *::after {
+  box-sizing: border-box;
+}
+
+// ---------- text helpers (links beat theme link rules)
+
+html:not(#x-hi) .MemberDesk {
+  .MemberDesk-name {
+    color: var(--md-text);
+    font-weight: 650;
+  }
+  .MemberDesk-username,
+  .MemberDesk-muted {
+    color: var(--md-muted);
+  }
+  .MemberDesk-faint {
+    color: var(--md-faint);
+  }
+  a.MemberDesk-who,
+  a.MemberDesk-other,
+  a.MemberDesk-name {
+    color: var(--md-text);
+    text-decoration: none;
+  }
+  a.MemberDesk-who:hover .MemberDesk-name,
+  a.MemberDesk-name:hover,
+  a.MemberDesk-other:hover span {
+    text-decoration: underline;
+  }
+  .MemberDesk-list a,
+  .MemberDesk-back,
+  .MemberDesk-tabs a {
+    color: var(--md-text);
+    text-decoration: none;
+  }
+  .MemberDesk-list a {
+    font-weight: 600;
+  }
+  .MemberDesk-list a:hover,
+  .MemberDesk-back:hover {
+    color: var(--md-primary);
+  }
+}
+
+.MemberDesk-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+.MemberDesk-error {
+  color: var(--md-danger);
+  background: var(--md-danger-bg);
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.MemberDesk-ext {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--md-faint);
+  margin-left: 6px;
+  letter-spacing: 0.01em;
+}
+
+// ---------- avatar, groups, pills
+
+.MemberDesk-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--avatar-bg, var(--md-soft));
+  color: #1f2933; // pastel backgrounds: dark text reads in light AND dark
+  font-weight: 700;
+  line-height: 1;
+}
+.MemberDesk-avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+.MemberDesk-avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: 17px;
+}
+.MemberDesk-avatar--lg {
+  width: 96px;
+  height: 96px;
+  font-size: 40px;
+}
+
+.MemberDesk-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  margin: 1px 4px 1px 0;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  color: var(--md-text);
+  background: color-mix(in srgb, var(--group-color) 16%, var(--md-bg));
+  border: 1px solid color-mix(in srgb, var(--group-color) 45%, transparent);
+
+  .icon {
+    color: var(--group-color);
+    font-size: 11px;
+  }
+}
+
+.MemberDesk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  margin: 1px 4px 1px 0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+
+  &--ok {
+    color: var(--md-ok);
+    background: var(--md-ok-bg);
+  }
+  &--warn {
+    color: var(--md-warn);
+    background: var(--md-warn-bg);
+  }
+  &--danger {
+    color: var(--md-danger);
+    background: var(--md-danger-bg);
+  }
+  &--info {
+    color: var(--md-info);
+    background: var(--md-info-bg);
+  }
+  &--muted {
+    color: var(--md-muted);
+    background: var(--md-soft);
+  }
+}
+
+.MemberDesk-callout {
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 10px;
+
+  &--ok {
+    color: var(--md-ok);
+    background: var(--md-ok-bg);
+  }
+  &--danger {
+    color: var(--md-danger);
+    background: var(--md-danger-bg);
+  }
+  &--info {
+    color: var(--md-info);
+    background: var(--md-info-bg);
+  }
+}
+
+// ---------- bar, tabs
+
+.MemberDesk-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--md-line);
+}
+
+.MemberDesk-tabs {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+
+  a,
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border: 0;
+    background: none;
+    border-bottom: 2px solid transparent;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--md-muted);
+    font-size: 14px;
+  }
+  html:not(#x-hi) & a {
+    color: var(--md-muted);
+  }
+  .is-active,
+  html:not(#x-hi) & a.is-active {
+    color: var(--md-text);
+    border-bottom-color: var(--md-primary);
+  }
+}
+
+.MemberDesk-tabBadge {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--md-soft);
+  color: var(--md-muted);
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.MemberDesk-barActions {
+  display: flex;
+  gap: 6px;
+  padding-bottom: 8px;
+}
+
+// ---------- list layout
+
+.MemberDesk-layout {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.MemberDesk-main {
+  min-width: 0;
+  container: deskmain / inline-size;
+}
+
+.MemberDesk-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.MemberDesk-fgroup {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+
+  h4,
+  legend {
+    margin: 0 0 6px;
+    padding: 0;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-muted);
+  }
+}
+
+.MemberDesk-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  cursor: pointer;
+  color: var(--md-text);
+  font-weight: 500;
+
+  input {
+    margin: 0;
+    flex: none;
+  }
+}
+
+.MemberDesk-savedItem {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+
+  &:hover {
+    background: var(--md-hover);
+  }
+  &.is-active {
+    background: var(--md-sel);
+  }
+}
+
+.MemberDesk-savedApply {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--md-text);
+  font-weight: 600;
+  text-align: left;
+
+  span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .MemberDesk-muted {
+    font-size: 11px;
+    font-weight: 500;
+  }
+}
+
+.MemberDesk-savedDelete {
+  border: 0;
+  background: none;
+  color: var(--md-faint);
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 6px;
+
+  &:hover {
+    color: var(--md-danger);
+  }
+}
+
+html:not(#x-hi) .MemberDesk .MemberDesk-saveCurrent {
+  color: var(--md-primary);
+  padding: 6px 8px;
+}
+
+.MemberDesk-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.MemberDesk-preset {
+  border: 1px solid var(--md-line);
+  background: var(--md-bg);
+  color: var(--md-text);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &.is-on {
+    background: var(--md-primary);
+    border-color: var(--md-primary);
+    color: var(--md-bg);
+  }
+}
+
+.MemberDesk-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    font-size: 11px;
+    color: var(--md-muted);
+    font-weight: 600;
+  }
+  .FormControl {
+    width: 100%;
+    min-width: 0;
+    padding: 5px 7px;
+    font-size: 13px;
+  }
+}
+
+.MemberDesk-filtersDone {
+  margin-top: 4px;
+}
+
+// ---------- toolbar, chips
+
+.MemberDesk-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.MemberDesk-search {
+  position: relative;
+  flex: 1 1 280px;
+  min-width: 0;
+
+  .icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-faint);
+    pointer-events: none;
+  }
+  .FormControl {
+    width: 100%;
+    padding-left: 34px;
+  }
+}
+
+.MemberDesk-sort {
+  margin: 0;
+  min-width: 0;
+  .FormControl {
+    width: auto;
+    max-width: 100%;
+    // Phones raise form text to 16px (no zoom on focus); a fixed height would clip it.
+    height: auto;
+    min-height: 36px;
+    line-height: 1.4;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+}
+
+.MemberDesk-filtersToggle {
+  display: none !important;
+}
+
+.MemberDesk-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+  min-height: 26px;
+}
+
+.MemberDesk-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--md-text);
+  margin-right: 6px;
+}
+
+.MemberDesk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 10px;
+  border-radius: 999px;
+  background: var(--md-info-bg);
+  color: var(--md-info);
+  font-size: 12px;
+  font-weight: 650;
+
+  button {
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 999px;
+    line-height: 1;
+  }
+}
+
+.MemberDesk-clear,
+.MemberDesk-selall button {
+  border: 0;
+  background: none;
+  color: var(--md-primary);
+  font-weight: 650;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 13px;
+}
+
+.MemberDesk-selall {
+  background: var(--md-info-bg);
+  color: var(--md-info);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+
+// ---------- table
+
+.MemberDesk-tableWrap {
+  border: 1px solid var(--md-line);
+  border-radius: var(--md-radius);
+  overflow: auto;
+  background: var(--md-bg);
+}
+
+.MemberDesk-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: color-mix(in srgb, var(--md-soft) 55%, var(--md-bg));
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--md-muted);
+    padding: 8px 8px;
+    border-bottom: 1px solid var(--md-line);
+    white-space: nowrap;
+  }
+  td {
+    padding: 8px 8px;
+    border-bottom: 1px solid var(--md-line);
+    vertical-align: middle;
+    white-space: nowrap;
+    color: var(--md-text);
+  }
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  tbody tr {
+    cursor: pointer;
+  }
+  tbody tr:hover td {
+    background: var(--md-hover);
+  }
+  tbody tr.is-selected td {
+    background: var(--md-sel);
+  }
+  .is-num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  th.is-num .MemberDesk-sortBtn {
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+.MemberDesk-table--log {
+  min-width: 760px;
+
+  tbody tr {
+    cursor: default;
+  }
+}
+
+.MemberDesk-wrap {
+  white-space: normal !important;
+}
+
+.MemberDesk-cb {
+  width: 34px;
+  input {
+    margin: 0;
+  }
+}
+
+.MemberDesk-sortBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  .icon {
+    font-size: 10px;
+    color: var(--md-primary);
+  }
+  .MemberDesk-sortIdle {
+    color: var(--md-faint);
+    opacity: 0.6;
+  }
+}
+
+.MemberDesk-who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.MemberDesk-names {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.MemberDesk-username {
+  font-size: 12px;
+}
+
+.MemberDesk-groups,
+.MemberDesk-status {
+  white-space: normal !important;
+  min-width: 120px;
+}
+
+.MemberDesk-email {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.MemberDesk-unverifiedIcon {
+  margin-left: 6px;
+  color: var(--md-warn);
+}
+
+.MemberDesk-more {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--md-muted);
+}
+
+.MemberDesk-empty {
+  text-align: center;
+  padding: 36px 12px !important;
+  color: var(--md-muted) !important;
+  list-style: none;
+}
+
+// ---------- phone cards
+
+.MemberDesk-cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.MemberDesk-cardsHead label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--md-muted);
+  font-weight: 600;
+  padding: 2px 4px;
+}
+
+.MemberDesk-card {
+  border: 1px solid var(--md-line);
+  border-radius: var(--md-radius);
+  background: var(--md-bg);
+  padding: 14px 16px;
+  min-width: 0;
+
+  h3 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--md-text);
+  }
+}
+
+.MemberDesk-cards .MemberDesk-card {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  cursor: pointer;
+
+  > input {
+    margin-top: 12px;
+    flex: none;
+  }
+  &.is-selected {
+    background: var(--md-sel);
+  }
+}
+
+.MemberDesk-cardBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .MemberDesk-name,
+  .MemberDesk-username {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.MemberDesk-cardPills {
+  margin-top: 4px;
+}
+
+.MemberDesk-cardStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 12px;
+  color: var(--md-muted);
+  margin-top: 4px;
+}
+
+// ---------- pager, bulk bar
+
+.MemberDesk-pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 2px;
+}
+
+.MemberDesk-pagerBtns {
+  display: flex;
+  gap: 6px;
+}
+
+.MemberDesk-bulk {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 1010;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 32px);
+  padding: 8px 8px 8px 16px;
+  border-radius: 12px;
+  background: var(--md-text);
+  color: var(--md-bg);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.28);
+
+  .Button {
+    background: color-mix(in srgb, var(--md-bg) 14%, transparent);
+    color: var(--md-bg);
+    font-weight: 650;
+    white-space: nowrap;
+  }
+  .Button:hover,
+  .Button:focus-visible {
+    background: color-mix(in srgb, var(--md-bg) 26%, transparent);
+    color: var(--md-bg);
+  }
+  .MemberDesk-bulkDanger {
+    background: #c62828;
+    color: #fff;
+  }
+  .MemberDesk-bulkDanger:hover,
+  .MemberDesk-bulkDanger:focus-visible {
+    background: #a51f1f;
+    color: #fff;
+  }
+}
+
+.MemberDesk-bulkCount {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.MemberDesk-bulkActions {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+}
+
+// ---------- member page: hero
+
+.MemberDesk-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.MemberDesk-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--md-line);
+  border-radius: 14px;
+  background: var(--md-bg);
+  box-shadow: var(--md-shadow);
+  margin-bottom: 14px;
+}
+
+.MemberDesk-heroBand {
+  height: 92px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--member-color) 75%, var(--md-bg)) 0%, transparent 60%),
+    radial-gradient(120% 160% at 100% 0%, color-mix(in srgb, var(--md-primary) 35%, var(--md-bg)) 0%, transparent 65%),
+    color-mix(in srgb, var(--member-color) 22%, var(--md-bg));
+}
+
+.MemberDesk-heroMain {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 0 22px 16px;
+  margin-top: -48px;
+}
+
+.MemberDesk-heroAvatar {
+  position: relative;
+  flex: none;
+
+  .MemberDesk-avatar--lg {
+    border: 4px solid var(--md-bg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.MemberDesk-online {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2fb36d;
+  border: 3px solid var(--md-bg);
+}
+
+.MemberDesk-heroId {
+  flex: 1 1 320px;
+  min-width: 0;
+  padding-top: 54px;
+}
+
+.MemberDesk .MemberDesk-heroName {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 750;
+  color: var(--md-text);
+  overflow-wrap: anywhere;
+}
+
+.MemberDesk-heroHandle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: var(--md-muted);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.MemberDesk-heroEmail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--md-text);
+
+  > .icon {
+    color: var(--md-muted);
+  }
+}
+
+.MemberDesk-emailText {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.MemberDesk-verify {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+
+  &--ok {
+    color: var(--md-ok);
+    background: var(--md-ok-bg);
+  }
+  &--no {
+    color: var(--md-warn);
+    background: var(--md-warn-bg);
+  }
+}
+
+.MemberDesk-heroBadges {
+  margin-top: 10px;
+}
+
+.MemberDesk-heroActions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-top: 56px;
+  margin-left: auto;
+
+  .Dropdown-menu {
+    min-width: 230px;
+  }
+}
+
+html:not(#x-hi) .MemberDesk .MemberDesk-menuDanger,
+html:not(#x-hi) .MemberDesk .MemberDesk-menuDanger .icon {
+  color: var(--md-danger);
+}
+
+.MemberDesk-menuNote {
+  display: block;
+  padding: 6px 15px 8px;
+  font-size: 12px;
+  color: var(--md-muted);
+  white-space: normal;
+}
+
+.MemberDesk-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(~'min(150px, 100%)', 1fr));
+  margin: 0;
+  border-top: 1px solid var(--md-line);
+}
+
+.MemberDesk-stat {
+  min-width: 0;
+  padding: 14px 18px;
+  border-right: 1px solid var(--md-line);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &:last-child {
+    border-right: 0;
+  }
+  dt {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-muted);
+  }
+  dd {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 750;
+    color: var(--md-text);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+}
+
+.MemberDesk-statSub {
+  font-size: 12px;
+  color: var(--md-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.MemberDesk-stat--spark {
+  min-width: 0;
+}
+
+.MemberDesk-spark {
+  display: flex !important;
+  align-items: flex-end;
+  gap: 3px;
+  height: 34px;
+  margin-top: 4px !important;
+
+  span {
+    flex: 1;
+    min-height: 2px;
+    height: var(--h);
+    border-radius: 2px 2px 0 0;
+    background: color-mix(in srgb, var(--member-color) 60%, var(--md-primary));
+  }
+}
+
+// ---------- banners
+
+.MemberDesk-banners {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.MemberDesk-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+
+  > .icon {
+    font-size: 16px;
+    flex: none;
+  }
+  > div {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  &--danger {
+    color: var(--md-danger);
+    background: var(--md-danger-bg);
+  }
+  &--warn {
+    color: var(--md-warn);
+    background: var(--md-warn-bg);
+  }
+  &--info {
+    color: var(--md-info);
+    background: var(--md-info-bg);
+  }
+}
+
+.MemberDesk-bannerSub {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.MemberDesk-tabs--member {
+  border-bottom: 1px solid var(--md-line);
+  margin-bottom: 14px;
+}
+
+// ---------- member page: panels
+
+.MemberDesk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.MemberDesk-card--wide {
+  grid-column: ~'1 / -1';
+}
+
+.MemberDesk-kv {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 8px 14px;
+  margin: 0;
+
+  dt {
+    color: var(--md-muted);
+    font-weight: 500;
+  }
+  dd {
+    margin: 0;
+    color: var(--md-text);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.MemberDesk-bio {
+  color: var(--md-text);
+  white-space: pre-line;
+}
+
+.MemberDesk-switches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--md-line);
+  }
+  li:last-child {
+    border-bottom: 0;
+  }
+}
+
+.MemberDesk-switchLabel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.MemberDesk-switch {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--md-text) 22%, var(--md-bg));
+  transition: background 0.15s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--md-bg);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: left 0.15s;
+  }
+  &.is-on {
+    background: var(--md-primary);
+  }
+  &.is-on::after {
+    left: 21px;
+  }
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--md-primary);
+    outline-offset: 2px;
+  }
+}
+
+.MemberDesk-chart {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  height: 170px;
+  margin-bottom: 8px;
+}
+
+.MemberDesk-chartCol {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}
+
+.MemberDesk-chartVal {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--md-muted);
+  min-height: 14px;
+}
+
+.MemberDesk-chartBar {
+  width: 100%;
+  max-width: 34px;
+  height: var(--h);
+  min-height: 2px;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--member-color) 55%, var(--md-primary)), var(--md-primary));
+  flex: none;
+  max-height: 120px;
+}
+
+.MemberDesk-chartLbl {
+  font-size: 11px;
+  color: var(--md-muted);
+}
+
+.MemberDesk-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--md-line);
+    min-width: 0;
+  }
+  li:last-child {
+    border-bottom: 0;
+  }
+  li.is-hidden {
+    opacity: 0.55;
+  }
+}
+
+.MemberDesk-session {
+  flex-direction: row !important;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px !important;
+}
+
+.MemberDesk-excerpt {
+  color: var(--md-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.MemberDesk-ips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.MemberDesk-ip {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--md-line);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.MemberDesk-ipHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-bottom: 6px;
+}
+
+.MemberDesk-ipAddr {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--md-text);
+}
+
+.MemberDesk-others {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.MemberDesk-othersLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--md-warn);
+  margin-right: 4px;
+}
+
+.MemberDesk-other {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 2px;
+  border-radius: 999px;
+  background: var(--md-soft);
+  font-weight: 600;
+  font-size: 13px;
+
+  .MemberDesk-avatar--sm {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+}
+
+.MemberDesk-notes {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+
+  li {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--md-warn-bg) 60%, var(--md-bg));
+    margin-bottom: 8px;
+  }
+  p {
+    margin: 0 0 4px;
+    color: var(--md-text);
+    white-space: pre-line;
+  }
+}
+
+.MemberDesk-noteForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+
+  .FormControl {
+    width: 100%;
+  }
+}
+
+.MemberDesk-strikes {
+  font-weight: 700;
+  color: var(--md-warn);
+}
+
+.MemberDesk-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 4px;
+}
+
+.MemberDesk-event {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 0 0 14px;
+  color: var(--md-text);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 14px;
+    bottom: 0;
+    width: 2px;
+    background: var(--md-line);
+  }
+  &:last-child::before {
+    display: none;
+  }
+  > div {
+    min-width: 0;
+  }
+}
+
+.MemberDesk-eventDot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--md-primary);
+  box-shadow: 0 0 0 3px var(--md-bg);
+}
+
+.MemberDesk-event--spammer .MemberDesk-eventDot,
+.MemberDesk-event--anonymize .MemberDesk-eventDot,
+.MemberDesk-event--delete .MemberDesk-eventDot,
+.MemberDesk-event--suspend .MemberDesk-eventDot {
+  background: var(--md-danger);
+}
+
+.MemberDesk-hashCheck {
+  margin-bottom: 14px;
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--md-text);
+  }
+}
+
+.MemberDesk-hashRow {
+  display: flex;
+  gap: 6px;
+  max-width: 520px;
+
+  .FormControl {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// ---------- confirm modal (outside .MemberDesk: modals render at the root)
+
+.MemberDeskConfirm {
+  --md-ok: #1b6b35;
+  --md-ok-bg: #e2f3e7;
+  --md-warn: #7a4f00;
+  --md-danger: #a8261b;
+  --md-danger-bg: #fde8e6;
+  --md-info: #24456e;
+  --md-info-bg: #e6eef8;
+
+  .MemberDesk-callout--ok {
+    color: var(--md-ok);
+    background: var(--md-ok-bg);
+  }
+  .MemberDesk-callout--danger {
+    color: var(--md-danger);
+    background: var(--md-danger-bg);
+  }
+  .MemberDesk-callout--info {
+    color: var(--md-info);
+    background: var(--md-info-bg);
+  }
+  .MemberDesk-muted {
+    color: var(--muted-color);
+  }
+  .MemberDesk-error {
+    color: var(--md-danger);
+    background: var(--md-danger-bg);
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+}
+
+html[data-theme^='dark'] .MemberDeskConfirm {
+  --md-ok: #86dba2;
+  --md-ok-bg: #173022;
+  --md-warn: #ffd27a;
+  --md-danger: #ff9b91;
+  --md-danger-bg: #3b1d1b;
+  --md-info: #b3cdf2;
+  --md-info-bg: #1b2738;
+}
+
+.MemberDeskConfirm-names {
+  max-height: 150px;
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 8px 12px;
+  margin: 0 0 10px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent);
+  color: var(--text-color);
+}
+
+.MemberDeskConfirm-modes {
+  margin-bottom: 12px;
+}
+
+.MemberDesk-seg {
+  display: flex;
+  border: 1px solid color-mix(in srgb, var(--text-color) 18%, transparent);
+  border-radius: 8px;
+  overflow: hidden;
+
+  button {
+    flex: 1;
+    border: 0;
+    padding: 9px;
+    background: none;
+    cursor: pointer;
+    font-weight: 650;
+    color: var(--muted-color);
+  }
+  button.is-on {
+    background: var(--primary-color);
+    color: var(--body-bg);
+  }
+  button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.MemberDeskConfirm-date {
+  margin-top: 6px;
+}
+
+.MemberDeskConfirm-type .FormControl {
+  max-width: 140px;
+}
+
+.Modal .MemberDeskConfirm-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+
+  > * {
+    margin: 0;
+  }
+}
+
+.Modal .Button.MemberDeskConfirm-danger {
+  background: #c62828;
+  color: #fff;
+  font-weight: 650;
+
+  &:hover,
+  &:focus-visible {
+    background: #a51f1f;
+    color: #fff;
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+// ---------- narrow spaces: by the room Member Desk actually has (the admin sidebar takes 250px),
+// not the viewport. The scope wraps everything but the fixed bulk bar: a size container is a
+// containing block for fixed descendants, so the bar must stay outside it.
+
+.MemberDesk-scope {
+  container: desk / inline-size;
+}
+
+@container desk (max-width: 1180px) {
+  .MemberDesk-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .MemberDesk-filters {
+    display: none;
+  }
+  .MemberDesk-filters.is-open {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(~'min(220px, 100%)', 1fr));
+    gap: 16px 20px;
+    border: 1px solid var(--md-line);
+    border-radius: var(--md-radius);
+    padding: 14px;
+    background: var(--md-bg);
+  }
+  .MemberDesk-filtersToggle {
+    display: inline-flex !important;
+  }
+  .MemberDesk-filtersDone {
+    grid-column: ~'1 / -1';
+    justify-self: start;
+  }
+}
+
+// Discussions and last IP need the table's own room (the filters may sit beside it).
+@container deskmain (max-width: 1200px) {
+  .MemberDesk-colWide {
+    display: none;
+  }
+}
+
+// Then the join date (it's on the member page and the phone cards).
+@container deskmain (max-width: 1020px) {
+  .MemberDesk-colMid {
+    display: none;
+  }
+}
+
+@container desk (max-width: 900px) {
+  .MemberDesk-tableWrap {
+    display: none;
+  }
+  .MemberDesk-cards {
+    display: flex;
+  }
+  .MemberDesk-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .MemberDesk-kv {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+
+    dd {
+      margin-bottom: 8px;
+    }
+  }
+  .MemberDesk-filters.is-open {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@container desk (max-width: 600px) {
+  .MemberDesk-heroBand {
+    height: 72px;
+  }
+  .MemberDesk-heroMain {
+    padding: 0 16px 14px;
+    margin-top: -40px;
+    gap: 12px;
+  }
+  .MemberDesk-avatar--lg {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+  .MemberDesk-heroId {
+    flex-basis: 100%;
+    padding-top: 0;
+  }
+  .MemberDesk .MemberDesk-heroName {
+    font-size: 22px;
+  }
+  .MemberDesk-heroActions {
+    padding-top: 0;
+    margin-left: 0;
+    width: 100%;
+  }
+  .MemberDesk-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .MemberDesk-stat {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--md-line);
+
+    &:nth-child(2n) {
+      border-right: 0;
+    }
+    dd {
+      font-size: 17px;
+    }
+  }
+  .MemberDesk-search {
+    flex-basis: 100%;
+  }
+  .MemberDesk-chart {
+    gap: 3px;
+  }
+}
+
+// The bulk bar is fixed to the viewport, so it follows the viewport.
+@media (max-width: 640px) {
+  .MemberDesk {
+    padding-bottom: 130px;
+  }
+  .MemberDesk-bulk {
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    transform: none;
+    max-width: none;
+    flex-wrap: wrap;
+    padding: 8px 10px;
+  }
+  .MemberDesk-bulkActions {
+    order: 3;
+    flex-basis: 100%;
+  }
+  .MemberDesk-bulkClose {
+    margin-left: auto;
+  }
+}
+
+// Dates need room for the browser's "mm/dd/yyyy" and its calendar button.
+.MemberDesk-range--dates {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+// Reports (Docket or flags)
+.MemberDesk-reportHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.MemberDesk-reports {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 650;
+
+  &.is-open {
+    color: var(--md-warn);
+  }
+  .icon {
+    font-size: 11px;
+  }
+}
+
+.MemberDesk-reportsOpen {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--md-warn-bg);
+  color: var(--md-warn);
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.MemberDesk-presets--after {
+  margin: 6px 0 0;
+}
+
+// If the table ever has to scroll inside its card, the checkbox and the member stay put.
+.MemberDesk-table {
+  th:nth-child(-n + 2),
+  td:nth-child(-n + 2) {
+    position: sticky;
+    z-index: 1;
+    background: var(--md-bg);
+  }
+  th:nth-child(-n + 2) {
+    z-index: 2;
+    background: color-mix(in srgb, var(--md-soft) 55%, var(--md-bg));
+  }
+  th:first-child,
+  td:first-child {
+    left: 0;
+  }
+  th:nth-child(2),
+  td:nth-child(2) {
+    left: 34px;
+    box-shadow: 1px 0 0 var(--md-line);
+  }
+  tbody tr:hover td:nth-child(-n + 2) {
+    background: color-mix(in srgb, var(--md-text) 4%, var(--md-bg));
+  }
+  tbody tr.is-selected td:nth-child(-n + 2) {
+    background: var(--md-sel);
+  }
+}

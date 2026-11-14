@@ -1,0 +1,108 @@
+{
+    "name": "ernestdefoe/member-desk",
+    "description": "Member Desk: an Invision-style members area for Flarum. A searchable, filterable member list with saved filters, bulk actions (groups, suspend, confirm email, mark as spammer, anonymize, delete through flarum/gdpr), a full member page, an audit log and CSV export.",
+    "keywords": [
+        "flarum",
+        "flarum-extension",
+        "members",
+        "users",
+        "admin",
+        "moderation",
+        "gdpr"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ernest Defoe",
+            "email": "ernestdefoe@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/ernestdefoe/member-desk",
+    "support": {
+        "issues": "https://github.com/ernestdefoe/member-desk/issues",
+        "source": "https://github.com/ernestdefoe/member-desk"
+    },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://buymeacoffee.com/ernestdefoe"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "flarum/core": "^2.0"
+    },
+    "suggest": {
+        "flarum/gdpr": "Anonymize members, and delete them with their content, through GDPR's own erasure",
+        "flarum/suspend": "Suspend and unsuspend members, one at a time or in bulk",
+        "flarum/audit": "Every Member Desk action also lands in Flarum's audit log",
+        "fof/ban-ips": "Filter by banned IP, ban an IP from the member page, and ban a spammer's IPs",
+        "fof/moderator-notes": "Private staff notes on the member page",
+        "fof/moderator-warnings": "Warnings and strikes on the member page",
+        "fof/masquerade": "Custom profile fields on the member page",
+        "ernestdefoe/docket": "Reports about a member on their page and in the list: status, assignee and outcome from Docket's report centre",
+        "flarum/flags": "Report counts in the list and on the member page (Docket adds statuses)"
+    },
+    "autoload": {
+        "psr-4": {
+            "ErnestDefoe\\MemberDesk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ErnestDefoe\\MemberDesk\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Member Desk",
+            "category": "feature",
+            "icon": {
+                "name": "fas fa-address-book",
+                "backgroundColor": "#4d698e",
+                "color": "#fff"
+            },
+            "optional-dependencies": [
+                "flarum/gdpr",
+                "flarum/suspend",
+                "flarum/audit",
+                "fof/ban-ips",
+                "fof/moderator-notes",
+                "fof/moderator-warnings",
+                "fof/masquerade",
+                "flarum/flags",
+                "ernestdefoe/docket"
+            ]
+        }
+    },
+    "require-dev": {
+        "ernestdefoe/docket": "^1.4",
+        "flarum/audit": "^2.0",
+        "flarum/flags": "^2.0",
+        "flarum/gdpr": "^2.0",
+        "flarum/phpstan": "^2.0",
+        "flarum/suspend": "^2.0",
+        "flarum/testing": "^2.0",
+        "fof/ban-ips": "^2.0@beta"
+    },
+    "scripts": {
+        "test": [
+            "@test:integration"
+        ],
+        "test:integration": "phpunit -c tests/phpunit.integration.xml",
+        "test:setup": "@php tests/integration/setup.php",
+        "analyse:phpstan": "phpstan analyse"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:integration": "Runs all integration tests.",
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
+        "analyse:phpstan": "Run static analysis"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
+}
